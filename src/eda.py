@@ -32,12 +32,22 @@ def avg_loan_by_ethnicity(ethnicities, ethnicity_dfs):
     return avg_loan
 ethnicity_avg_loan = avg_loan_by_ethnicity(ethnicities, ethnicity_dfs)
 
+#total loan amount for each ethnicity
+def total_loan_by_ethnicity(ethnicities, ethnicity_dfs):
+    '''
+    Computes average loan amount for each dataframe in inputted list.
+
+    Returns: Dictionary of averages for each ethnicity in the form of ethnicity:average
+    '''
+    total_loan = {eth:df['LoanAmount'].sum() for eth, df in zip(ethnicities, ethnicity_dfs)}
+    return total_loan
+ethnicity_total_loan = total_loan_by_ethnicity(ethnicities, ethnicity_dfs)
 
 #colors for bar charts
 chart_colors = ['#003f5c', '#58508d', '#bc5090', '#dd5182','#ff6361', '#ffa600']
 
 #graph average loan amounts 
-def average_loan_ethnicity(ethnicity_avg_loan, chart_colors, save_loc):
+def graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, save_loc):
     '''
     Graphs the Average Loan Amount by Ethnicity
 
@@ -55,7 +65,29 @@ def average_loan_ethnicity(ethnicity_avg_loan, chart_colors, save_loc):
     ax.set_title('Average Loan Amount by Ethnicity in Colorado', fontsize=18)
     plt.savefig(save_loc, bbox_inches='tight')
 
-average_loan_ethnicity(ethnicity_avg_loan, chart_colors, '../images/avg_loan_ethnicity.png')
+graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, '../images/avg_loan_ethnicity.png')
+
+#graph total loan for each ethnicity
+def graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, save_loc):
+    '''
+    Graphs the total Loan Amount by Ethnicity
+
+    Returns: None
+    '''
+    fig, ax = plt.subplots(1, figsize=(12,4), dpi=700)
+    keys = ethnicity_total_loan.keys()
+    totals = ethnicity_total_loan.values()
+    bar = ax.bar(keys, totals)
+    for i in range(len(ethnicity_total_loan)):
+        bar[i].set_color(chart_colors[i])
+    plt.xticks(rotation=45, fontsize=12, horizontalalignment='right')
+    #ax.set_yscale('log') #not sure if the scaling is welcome here or not...
+    ax.set_xlabel('Ethnicity', fontsize= 16)
+    ax.set_ylabel('Total Loan Amount in $', fontsize= 16)
+    ax.set_title('Total Loan Amount by Ethnicity in Colorado', fontsize=18)
+    plt.savefig(save_loc, bbox_inches='tight')
+
+graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, '../images/total_loan_ethnicity.png')
 
 #top zip codes for each ethnicity
 def top_zip(ethnicity_dfs, ethnicities):
@@ -124,6 +156,27 @@ def graph_top_counties(top_county, chart_colors, saveloc):
 
 graph_top_counties(top_county, chart_colors, '../images/top_county_loancount.png')
 
+#top county total loan amount
+def top_county_sum(ethnicity_dfs, ethnicities):
+    '''
+    Counts the number of loans for each Ethnicity group, sorts by top 5.
+
+    Returns: Dictionary where Keys are the Ethnicities and values are a dataframe of top 5
+    zipcodes and the count of loans from each zip.
+    '''
+    top_dict = {}
+    for eth, df in zip(ethnicities, ethnicity_dfs):
+        count_counties = df.groupby(['county']).sum()['LoanAmount']
+        sort_counties = count_counties.sort_values(ascending=False).head(5)
+        top_dict[eth]= sort_counties
+    return top_dict
+
+top_county_sum = top_county_sum(ethnicity_dfs, ethnicities)
+
+#top county bar chart
+graph_top_counties(top_county_sum, chart_colors, '../images/top_county_loansum.png')
+
+
 #create list of population from demographics data
 demographic_eth_cols = ['NH Whites','Hispanic','NH Am Indian/Native','NH Asian','NH Afr Am']
 total_demographics = [sum(demographics_18[x]) for x in demographic_eth_cols]
@@ -138,7 +191,7 @@ def graph_demographics(total_demographics, ethnicities, saveloc):
     plt.bar(ethnicities_dem, total_demographics, color=chart_colors)
     plt.xticks(rotation=45, fontsize=12)
     ax.set_yscale('log')
-    ax.set_xlabel('Number of Loans', fontsize=16)
+    ax.set_xlabel('Ethnicity', fontsize=16)
     ax.set_ylabel('Millions of People', fontsize=16)
     ax.set_title('Distribution of Ethnicity in Colorado', fontsize=18)
     plt.savefig(saveloc, bbox_inches='tight')
@@ -217,6 +270,38 @@ def graph_top_county_demographics(demographics_by_county, ethnicities, top_count
     plt.savefig(saveloc, bbox_inches='tight')
 
 graph_top_county_demographics(demographics_by_county, ethnicities, top_counties_loans, chart_colors, '../images/top_county_loancount.png')
+
+
+#scatter comparison of Jobs Retained to Loan Amount by ethnicity
+ethnicity_dfs_job_comparison = [x.dropna(subset=['JobsRetained']) for x in ethnicity_dfs]
+
+loan_by_ethnicity = [list(x['LoanAmount'].values) for x in ethnicity_dfs_job_comparison]
+jobs_retained_by_ethnicity = [list(x['JobsRetained'].values) for x in ethnicity_dfs_job_comparison]
+
+## avg amount of loan compared to jobs retained by ethnicity
+avg_loan_by_ethnicity = [round(x['LoanAmount'].mean(),2) for x in ethnicity_dfs_job_comparison]
+avg_jobs_retained_by_ethnicity = [round(x['JobsRetained'].mean(),3) for x in ethnicity_dfs_job_comparison]
+
+def zip_lists(list1,list2):
+    zipped = [(x,y) for x,y in zip(list1, list2)]
+    return zipped
+avg_jobs_loans = zip_lists(avg_jobs_retained_by_ethnicity, avg_loan_by_ethnicity)
+
+
+def graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_jobs_loans, chart_colors, ethnicities, saveloc):
+    fig, ax = plt.subplots(1, figsize=(10,6))
+
+    for i in range(len(loan_by_ethnicity)):
+        ax.scatter(loan_by_ethnicity[i], jobs_retained_by_ethnicity[i], color=chart_colors[i], label=ethnicities[i])
+
+
+    ax.set_ylabel('Jobs Retained', fontsize=16)
+    ax.set_xlabel('Amount of Loan in USD', fontsize=16)
+    ax.set_title('Loan Amount vs Jobs Retained by Ethnicity')
+    plt.ylim([0,125])
+    plt.legend()    
+
+
 
 if __name__ == '__main__':
    print('hi')

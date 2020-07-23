@@ -1,4 +1,4 @@
-# Allocation of Government Resources during COVID and its Effect in Colorado
+# Allocation of Payroll Protection Plan Funding under $150k during COVID and its Effect in Colorado
 
 ## Motivation and Background:
 
@@ -70,13 +70,21 @@ Comparison of average loan amount for each ethnicity:
 
 ![](images/avg_loan_ethnicity.png)
 
-Top Zip Codes for Loans:
+Comparison of total loan amount for each ethnicity (*NOTE: The amounts are scaled to see the differences, the White population loan total is vastly larger than the rest of the ethnicities):
 
-![](images/top_zip_loancount.png)
+![](images/total_loan_ethnicity.png)
 
-Top Counties for Loans:
+Here is the graph of total loan amounts without scaling:
+
+![](images/total_loan_ethnicity_nologscale.png)
+
+Top Counties for Number of Loans:
 
 ![](images/top_county_loancount.png)
+
+Top 8 Counties for Total Loan Amount:
+
+![](images/top_county_loansum.png)
 
 Top Counties Demographics:
 
@@ -84,7 +92,11 @@ Top Counties Demographics:
 
 Comparison of Loan Amount and Jobs Retained:
 For this comparison, I dropped all rows in which the Jobs Retained field was unanswered.
-The first graph is for ALL data (unanswered ethnicities included), and the second graph has the ethnicities color coded with the overall average in a big ole X. 
+The ethnicities are color coded with the overall average specified as an X.
+
+![](images/loan_amount_jobs_retained.png)
+
+
 
 ## Results:
 Since such a small portion of borrowers actually reported their ethnicity, the results are a very small representation of the full population. 
