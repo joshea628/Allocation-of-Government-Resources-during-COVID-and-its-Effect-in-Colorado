@@ -26,6 +26,8 @@ My ultimate goal is to determine whether or not there is a disparity between the
 
 This dataset comes from the Small Business Administration which includes information about the loan provided to small businesses in Colorado. This data came in the form of a csv with information including: loan amount, county, zip code, business type, NAICS code (industry each business belongs to), Race/Ethnicity, Gender, number of jobs retained, and lender. 
 
+<img src='images/screenshot_column_names.png' width='400x' height='350'>
+
 Since much of this information was self reported by the payees of the loans, the majority of the data included unanswered fields which were excluded.
 
 The clean_data.py script was used in order to clean the data for my EDA. 
@@ -34,7 +36,7 @@ This dataset is comprised of 91018 rows, 84247 of which have an unanswered ethni
 
 The raw Payroll Protection Data looks like this: 
 
-![](add in screenshot of the raw dataset here)
+![](images/screenshot_raw_data.png)
 
 
 Important cleaning steps: **(picture of data for context? pic of form people have to fill out??) 
@@ -45,7 +47,13 @@ Important cleaning steps: **(picture of data for context? pic of form people hav
 
 After eliminating the rows with an unanswered ethnicity and the other data cleaning steps listed above:
 
-![](add in screenshot of the cleaned data, maybe a couple of different ethnicities)
+Hispanic data:
+
+![](images/screenshot_cleaned_hispanic.png)
+
+Asian data:
+
+![](images/screenshot_cleaned_asian.png)
 
 ## EDA: 
 
@@ -74,6 +82,10 @@ Top Counties Demographics:
 
 ![](images/top_county_loancount_demographic.png)
 
+Comparison of Loan Amount and Jobs Retained:
+For this comparison, I dropped all rows in which the Jobs Retained field was unanswered.
+The first graph is for ALL data (unanswered ethnicities included), and the second graph has the ethnicities color coded with the overall average in a big ole X. 
+
 ## Results:
 Since such a small portion of borrowers actually reported their ethnicity, the results are a very small representation of the full population. 
 
@@ -82,6 +94,13 @@ Looking at the 6700 records that do include ethnicity, you can see that the full
 ## Future Work:
 If the records of the respective ethnicity Chamber of Commerce could be obtained and compared to the payroll data to help fill in ethnicity, the data can be examined in a more full capacity.
 
+With more time, it would be nice to visualize where the loans are being taken out on a map. I would make a heat map, colored for ethnicity according to the most loans taken out in those zip codes.  
+
+I could also pull in some more information about the demographic makeup of industries in colorado and compare that to the Payroll Protection Data, paying close attention to if there are any Fortune 500 companies on the list. 
+
+I would love to do a comparison of gender.
+
+Compare the loans by county to the COVID outbreak data to see if certain areas were hit harder than others. 
 
 ## References:
 Small Business Administration,  US Census Data from 2018, Sandra Halvatzis
