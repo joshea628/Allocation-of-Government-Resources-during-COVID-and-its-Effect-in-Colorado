@@ -6,37 +6,36 @@ In the current political and ethical climate of the US, equity and equality have
 
 Our class was approached by a consultant working for the Hispanic Chamber of Commerce who was trying to create a story about COVID-19's effect on the Hispanic community of Colorado. She provided a dataset that detailed Colorado's dispursement of Payroll Protection Loans.
 
+![](insert meaningful picture here? to break up all the text and provide a bit more context?)
+
 I have a few questions I would like to answer:
 
 - What does the average loan amount look like for each ethnicity in Colorado? 
-- Where are these loans being taken out? Is there a specific county that stands out? 
-- Which banks are providing these loans? 
+- Where are these loans being taken out? Is there a specific county that stands out?
+- What do the demographics of those counties look like? 
 - What types of businesses are recieving loans? Do they belong to the Fortune 500 list? Are there certain industries that are recieving more than others? 
  - Does gender come into play at all?
 
-The dataset is specific to Colorado's distribution of Small Business loans and comes from the US Small Business Administration. 
+The dataset is specific to Colorado's distribution of Small Business loans and comes from the US Small Business Administration. I have also used the US Census data for the demographics, and a small dataset that lists all zip codes and the counties they belong to.
 
-My ultimate goal is to determine whether or not there is a disparity between the loan allocation to the population in Colorado across all ethnicities provided in the dataset.
+My ultimate goal is to determine whether or not there is a disparity between the loan allocation and the population in Colorado across all ethnicities provided in the dataset.
 
 
 
 ## Data Cleaning:
 
-This dataset comes from the Small Business Administration which includes information about the loan provided to small businesses in Colorado. This data came in the form of a csv with information including: loan amount, county, zip code, business type, NAICS code (*** explain what this is...), Race/Ethnicity, Gender, number of jobs retained, and lender. 
+This dataset comes from the Small Business Administration which includes information about the loan provided to small businesses in Colorado. This data came in the form of a csv with information including: loan amount, county, zip code, business type, NAICS code (industry each business belongs to), Race/Ethnicity, Gender, number of jobs retained, and lender. 
 
-Since much of this information was self reported by the payees of the loans, the majority of the data included unanswered fields which were excluded. 
+Since much of this information was self reported by the payees of the loans, the majority of the data included unanswered fields which were excluded.
 
 The clean_data.py script was used in order to clean the data for my EDA. 
 
-This dataset is comprised of 91018 rows, 84247 of which have an unanswered ethnicity. I made the decision to analyze the data in two ways for the project. The first is to use the original data and eliminate all unanswered ethnicity fields which leaves 6771 rows to work with. The second way I will analyze the data is to impute the missing ethnicities based on the K-nearest neighbors. This process will use the Loan Amounts, City, Zipcode, NAICSCode, and Business Type to fill in an ethnicity. 
+This dataset is comprised of 91018 rows, 84247 of which have an unanswered ethnicity. I decided to use the original data and eliminate all unanswered ethnicity fields which leaves 6771 rows to work with. 
 
-The advantages of imputing missing ethnicities:
- - more data to work with
+The raw Payroll Protection Data looks like this: 
 
-Disadvantages of imputing missing ethnicities:
- - assuming a correlation between city/loan amount/ business type/ etc and ethnicity where there may not be one. 
+![](add in screenshot of the raw dataset here)
 
-Although there seemed to be more disadvantages to imputing the data, I decided to go ahead and do it anyway so I could compare it with the 'pure' data and see if there is a clear enough picture to paint about how ethnicity affects the Payroll Protection loans given. 
 
 Important cleaning steps: **(picture of data for context? pic of form people have to fill out??) 
 
@@ -44,8 +43,17 @@ Important cleaning steps: **(picture of data for context? pic of form people hav
 - Isolate answered Ethnicities
 
 
+After eliminating the rows with an unanswered ethnicity and the other data cleaning steps listed above:
+
+![](add in screenshot of the cleaned data, maybe a couple of different ethnicities)
 
 ## EDA: 
+
+Before focusing in on the specific comparisons, I decided to look at the 6700 rows of data in the form of a scatter matrix to see if there are any glaring correlations between columns. 
+
+![](add scatter matrix here)
+
+
 Demographics in Colorado:
 
 ![](images/demographics.png)
