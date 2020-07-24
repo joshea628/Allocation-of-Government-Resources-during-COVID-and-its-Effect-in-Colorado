@@ -3,7 +3,7 @@
 ## Motivation and Background:
 COVID-19 has affected all of our lives, especially the small businesses in our communities. The Government's solution was to offer Payroll Protection Funding in order to try to save those small businesses, and the people's jobs who work there.
 
-In the current political and ethical climate of the US, equity and equality have taken a front seat in the public's minds. When looking at the ethnic distribution in Colorado, it is very clear that the Hispanic community is prominent in the makeup. As such, it is important to take a look at whether or not the distribution of  accurately represents the distribution of all ethnicities across the population of Colorado.
+In the current political and ethical climate of the US, equity and equality have taken a front seat in the public's minds. When looking at the ethnic distribution in Colorado, it is very clear that the Hispanic community is prominent in the makeup. As such, it is important to take a look at whether or not the distribution of Payroll Protection loans accurately represents the distribution of all ethnicities across the population of Colorado.
 
 The Payroll Protection Plan dataset is specific to Colorado's distribution of Small Business loans and comes from the US Small Business Administration. It includes all loans under $150k. I have also used the US Census data for the demographics, and a small dataset that lists all zip codes and the counties they belong to.
 
