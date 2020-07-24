@@ -1,22 +1,17 @@
 # Allocation of Payroll Protection Plan Funding under $150k during COVID and its Effect in Colorado
 
 ## Motivation and Background:
+COVID-19 has affected all of our lives, especially the small businesses in our communities. The Government's solution was to offer Payroll Protection Funding in order to try to save those small businesses, and the people's jobs who work there.
 
-In the current political and ethical climate of the US, equity and equality have taken a front seat in the public's minds. When looking at the ethnic distribution in Colorado, it is very clear that the Hispanic community is prominent in the makeup of our community. As such, it is important to take a look at whether or not the distribution of government resources accurately represents the distribution of all ethnicities across the population of Colorado.
+In the current political and ethical climate of the US, equity and equality have taken a front seat in the public's minds. When looking at the ethnic distribution in Colorado, it is very clear that the Hispanic community is prominent in the makeup. As such, it is important to take a look at whether or not the distribution of  accurately represents the distribution of all ethnicities across the population of Colorado.
 
-Our class was approached by a consultant working for the Hispanic Chamber of Commerce who was trying to create a story about COVID-19's effect on the Hispanic community of Colorado. She provided a dataset that detailed Colorado's dispursement of Payroll Protection Loans.
+The Payroll Protection Plan dataset is specific to Colorado's distribution of Small Business loans and comes from the US Small Business Administration. It includes all loans under $150k. I have also used the US Census data for the demographics, and a small dataset that lists all zip codes and the counties they belong to.
 
-![](insert meaningful picture here? to break up all the text and provide a bit more context?)
-
-I have a few questions I would like to answer:
+I have a few questions I would like to answer with this data:
 
 - What does the average loan amount look like for each ethnicity in Colorado? 
 - Where are these loans being taken out? Is there a specific county that stands out?
 - What do the demographics of those counties look like? 
-- What types of businesses are recieving loans? Do they belong to the Fortune 500 list? Are there certain industries that are recieving more than others? 
- - Does gender come into play at all?
-
-The dataset is specific to Colorado's distribution of Small Business loans and comes from the US Small Business Administration. I have also used the US Census data for the demographics, and a small dataset that lists all zip codes and the counties they belong to.
 
 My ultimate goal is to determine whether or not there is a disparity between the loan allocation and the population in Colorado across all ethnicities provided in the dataset.
 
@@ -26,11 +21,11 @@ My ultimate goal is to determine whether or not there is a disparity between the
 
 This dataset comes from the Small Business Administration which includes information about the loan provided to small businesses in Colorado. This data came in the form of a csv with information including: loan amount, county, zip code, business type, NAICS code (industry each business belongs to), Race/Ethnicity, Gender, number of jobs retained, and lender. 
 
+The full list of columns included:
+
 <img src='images/screenshot_column_names.png' width='400x' height='350'>
 
-Since much of this information was self reported by the payees of the loans, the majority of the data included unanswered fields which were excluded.
-
-The clean_data.py script was used in order to clean the data for my EDA. 
+Since much of this information was self-reported by the borrowers, the majority of the data included unanswered fields. For my analysis that is largely based on the Ethnic makeup of the data, I excluded only the rows of data that did not include an ethnicity.
 
 This dataset is comprised of 91018 rows, 84247 of which have an unanswered ethnicity. I decided to use the original data and eliminate all unanswered ethnicity fields which leaves 6771 rows to work with. 
 
@@ -43,6 +38,8 @@ Important cleaning steps: **(picture of data for context? pic of form people hav
 
 - Drop NonProfit columns
 - Isolate answered Ethnicities
+- Merge in Zip Code/County data so I could group the data by County
+- Only include 2018 from the US Census data
 
 
 After eliminating the rows with an unanswered ethnicity and the other data cleaning steps listed above:
@@ -94,7 +91,7 @@ Comparison of Loan Amount and Jobs Retained:
 For this comparison, I dropped all rows in which the Jobs Retained field was unanswered.
 The ethnicities are color coded with the overall average specified as an X.
 
-![](images/loan_amount_jobs_retained.png)
+![](images/loan_vs_jobs_retained.png)
 
 
 

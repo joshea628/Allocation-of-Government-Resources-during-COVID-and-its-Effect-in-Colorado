@@ -29,4 +29,4 @@ demographics_18 = demographics_18.iloc[:,:11]
 
 if __name__ == '__main__':
 
-    print(demographics_18)
+    

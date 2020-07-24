@@ -199,77 +199,21 @@ def graph_demographics(total_demographics, ethnicities, saveloc):
 graph_demographics(total_demographics, ethnicities, '../images/demographics.png')
 
 #demographics for top 8 counties
+demographics_top_8 = demographics_18[(demographics_18['CTYNAME'] == 'Denver County') | (demographics_18['CTYNAME'] == 'El Paso County') |(demographics_18['CTYNAME'] == 'Jefferson County') |(demographics_18['CTYNAME'] == 'Arapahoe County') | (demographics_18['CTYNAME'] == 'Larimer County')|(demographics_18['CTYNAME'] == 'Adams County') | (demographics_18['CTYNAME'] == 'Douglas County') | (demographics_18['CTYNAME'] == 'Weld County')]
+demographics_top_8['Other'] = demographics_top_8['NH Native Hawaiian/other'] + demographics_top_8['NH Two or more']
+demographics_top_8 = demographics_top_8.set_index('CTYNAME').sort_values(['TOT_POP'],ascending=True)
+demographics_top_8 = demographics_top_8.rename(columns={'NH Whites':'White','NH Afr Am': 'Black or African American','NH Am Indian/Native':'American Indian or Alaska Native','NH Asian':'Asian'})
 
-#pull out top counties
-top_counties_loans= ['Denver County', 'El Paso County', 'Jefferson County','Arapahoe County','Larimer County','Adams County','Douglas County','Weld County']
-#create list of county rows
-county_rows = [demographics_18[demographics_18['CTYNAME'] == x] for x in top_counties_loans]
-
-#iterate through list of counties and pull out populations for each ethnicity
-demographics_by_county =[]
-for i in range(len(county_rows)):
-    county_list = []
-    for x in demographic_eth_cols:
-        county_list.append(int(county_rows[i][x].values))
-    
-    other = county_rows[i]['NH Two or more'].values + county_rows[i]['NH Native Hawaiian/other'].values
-    county_list.append(int(other))
-    demographics_by_county.append(county_list)
-
-
-#### issue?
-#demographics by county
-top_counties_loans= ['Denver County', 'El Paso County', 'Jefferson County','Arapahoe County','Larimer County','Adams County','Douglas County','Weld County']
-county_rows = [demographics_18[demographics_18['CTYNAME'] == x] for x in top_counties_loans]
-
-#iterate through list of counties and pull out populations for each ethnicity
-demographics_county_ethnicity =[]
-for eth in demographic_eth_cols:
-    ethnicity_counts = []
-    for i in range(len(county_rows)):
-        ethnicity_counts.append(int(county_rows[i][eth].values))
-    demographics_county_ethnicity.append(ethnicity_counts)
-
-other_dem = []  
-for i in range(len(county_rows)):
-    other = county_rows[i]['NH Two or more'].values + county_rows[i]['NH Native Hawaiian/other'].values
-    other_dem.append(int(other))
-demographics_county_ethnicity.append(other_dem)
-demographics_county_ethnicity
-
-
-###BETTER THAN ABOVE
-#demographics by county
-top_counties_loans= ['Denver County', 'El Paso County', 'Jefferson County','Arapahoe County','Larimer County','Adams County','Douglas County','Weld County']
-county_rows = [demographics_18[demographics_18['CTYNAME'] == x] for x in top_counties_loans]
-
-#iterate through list of counties and pull out populations for each ethnicity
-demographics_by_county =[]
-for i in range(len(county_rows)):
-    county_list = []
-    for eth in demographic_eth_cols:
-        county_list.append(int(county_rows[i][eth].values))
-    
-    other = county_rows[i]['NH Two or more'].values + county_rows[i]['NH Native Hawaiian/other'].values
-    county_list.append(int(other))
-    demographics_by_county.append(county_list)
-demographics_by_county[::-1]
-
-#top county bar chart
-def graph_top_county_demographics(demographics_by_county, ethnicities, top_counties_loans, chart_colors, saveloc):
-    ethnicities_dem = ethnicities[:-1]
-    ethnicities_dem=np.append(ethnicities_dem, 'Other')
-    #demographics_by_county=reversed(demographics_by_county)
-    fig, ax = plt.subplots(1,figsize=(10,6))
-    for x in range(len(demographics_by_county)):
-        plt.barh(top_counties_loans[x], demographics_by_county[x], label=top_counties_loans[x], color=chart_colors)
-        
-    ax.set_xlabel('Number of People', fontsize=17)
+def graph_demographics_top_counties(demographics_top_8, chart_colors, saveloc):
+    ax = demographics_top_8[['White', 'Hispanic', 'American Indian or Alaska Native', 'Asian','Black or African American','Other']].plot(kind='barh', stacked=True, color=chart_colors, figsize=(10,6))
+    y_axis = ax.yaxis
+    y_axis.label.set_visible(False)
     ax.set_title('Demographics of Top 8 Counties for Loans', fontsize=18)
-    plt.legend(ethnicities_dem)
+    ax.set_xlabel('Number of People', fontsize=16)
+    plt.yticks(fontsize = 14)
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_top_county_demographics(demographics_by_county, ethnicities, top_counties_loans, chart_colors, '../images/top_county_loancount.png')
+graph_demographics_top_counties(demographics_top_8, chart_colors, '../images/top_county_loancount_demographic.png')
 
 
 #scatter comparison of Jobs Retained to Loan Amount by ethnicity
@@ -288,20 +232,22 @@ def zip_lists(list1,list2):
 avg_jobs_loans = zip_lists(avg_jobs_retained_by_ethnicity, avg_loan_by_ethnicity)
 
 
-def graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_jobs_loans, chart_colors, ethnicities, saveloc):
+def graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan_by_ethnicity, avg_jobs_retained_by_ethnicity, chart_colors, ethnicities, saveloc):
     fig, ax = plt.subplots(1, figsize=(10,6))
 
     for i in range(len(loan_by_ethnicity)):
         ax.scatter(loan_by_ethnicity[i], jobs_retained_by_ethnicity[i], color=chart_colors[i], label=ethnicities[i])
-
-
+    for i in range(len(avg_loan_by_ethnicity)):
+        ax.scatter(avg_loan_by_ethnicity[i],avg_jobs_retained_by_ethnicity[i],color=chart_colors[i], marker='x', linewidths=20)
     ax.set_ylabel('Jobs Retained', fontsize=16)
     ax.set_xlabel('Amount of Loan in USD', fontsize=16)
-    ax.set_title('Loan Amount vs Jobs Retained by Ethnicity')
+    ax.set_title('Loan Amount vs Jobs Retained by Ethnicity', fontsize=18)
     plt.ylim([0,125])
-    plt.legend()    
+    plt.legend()
+    plt.savefig(saveloc, bbox_inches='tight')
 
+graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan_by_ethnicity, avg_jobs_retained_by_ethnicity, chart_colors, ethnicities, '../images/loan_vs_jobs_retained.png')
 
 
 if __name__ == '__main__':
-   print('hi')
+   
