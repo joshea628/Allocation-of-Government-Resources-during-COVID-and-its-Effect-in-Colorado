@@ -54,11 +54,6 @@ Asian data:
 
 ## EDA: 
 
-Before focusing in on the specific comparisons, I decided to look at the 6700 rows of data in the form of a scatter matrix to see if there are any glaring correlations between columns. 
-
-![](add scatter matrix here)
-
-
 Demographics in Colorado:
 
 ![](images/demographics.png)
@@ -89,7 +84,6 @@ Top Counties Demographics:
 
 Comparison of Loan Amount and Jobs Retained:
 For this comparison, I dropped all rows in which the Jobs Retained field was unanswered.
-The ethnicities are color coded with the overall average specified as an X.
 
 ![](images/loan_vs_jobs_retained.png)
 
@@ -98,18 +92,27 @@ The ethnicities are color coded with the overall average specified as an X.
 ## Results:
 Since such a small portion of borrowers actually reported their ethnicity, the results are a very small representation of the full population. 
 
-Looking at the 6700 records that do include ethnicity, you can see that the full demographics 
+Looking at the 6700 records that do include ethnicity, the distribution of PPP loans do not correspond with the demographics on the county level, nor on the state-level. 
+
+In some counties such as Weld, Douglas, and Adams, there were very few loans taken out while there is a significant portion of the population living in those counties. Weld is the county East of Fort Collins where there is a lot of farmland, Douglas is in between Denver and CO Springs, and Adams County is NE of Denver and includes a lot of cities around DIA airport.
+
+Overall, with the data we have it is clear that the White population in all counties disproportionately has received more loans, in higher amounts than the other ethnicities in Colorado. 
+
+The larger loans seemed to save slightly more jobs than smaller loans.
+
+Could there be a tendency for minorities to not answer with their ethnicity? 
+
 
 ## Future Work:
 If the records of the respective ethnicity Chamber of Commerce could be obtained and compared to the payroll data to help fill in ethnicity, the data can be examined in a more full capacity.
 
-With more time, it would be nice to visualize where the loans are being taken out on a map. I would make a heat map, colored for ethnicity according to the most loans taken out in those zip codes.  
+With more time, it would be nice to visualize where the loans are being taken out on a map. I would make a heat map colored for the ethnicity with the most loans taken out in those zip codes.  
 
-I could also pull in some more information about the demographic makeup of industries in colorado and compare that to the Payroll Protection Data, paying close attention to if there are any Fortune 500 companies on the list. 
+I could also pull in some more information about the demographic makeup of industries in Colorado and compare that to the Payroll Protection Plan Data, paying close attention to if there are any Fortune 500 companies on the list. 
 
-I would love to do a comparison of gender.
+A gender comparison would also be nice to see if there is any correlation to ethnicity, loan amount, or industry.
 
-Compare the loans by county to the COVID outbreak data to see if certain areas were hit harder than others. 
+Another important possible exercise would be to compare the loans by county to the COVID outbreak data to see if certain areas were hit harder than others. 
 
 ## References:
 Small Business Administration,  US Census Data from 2018, Sandra Halvatzis

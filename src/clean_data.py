@@ -26,6 +26,8 @@ df_with_counties = pd.merge(df2,co_counties_1, left_on='Zip', right_on='zip')
 demographics_18 = demographics[demographics['YEAR']==2018]
 demographics_18 = demographics_18.iloc[:,:11]
 
+#drop NAN Jobs Retained values for scatter comparison of Jobs Retained to Loan Amount by ethnicity
+ethnicity_dfs_job_comparison = [x.dropna(subset=['JobsRetained']) for x in ethnicity_dfs]
 
 if __name__ == '__main__':
 

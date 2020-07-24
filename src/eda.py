@@ -4,10 +4,6 @@ from clean_data import *
 
 plt.style.use('fivethirtyeight')
 
-#List all unique ethnicities
-ethnicities = df_with_counties['RaceEthnicity'].unique()
-
-#separate data into ethnicities
 def split_ethnicities(ethnicities):
     '''
     Splits main dataframe into separate dataframes for each ethnicity included in data
@@ -16,12 +12,8 @@ def split_ethnicities(ethnicities):
     '''
     dataframes = [df_with_counties[df_with_counties['RaceEthnicity'] == name] for name in ethnicities]
     return dataframes
-#unpack dataframes
-white_df, hispanic_df, am_indian_alaska_df, asian_df, black_df, puerto_rican_df = split_ethnicities(ethnicities)
-ethnicity_dfs = [white_df, hispanic_df, am_indian_alaska_df, asian_df, black_df, puerto_rican_df]
 
 
-#average loan amount for each ethnicity
 def avg_loan_by_ethnicity(ethnicities, ethnicity_dfs):
     '''
     Computes average loan amount for each dataframe in inputted list.
@@ -30,9 +22,8 @@ def avg_loan_by_ethnicity(ethnicities, ethnicity_dfs):
     '''
     avg_loan = {eth:round(df['LoanAmount'].mean(),2) for eth, df in zip(ethnicities, ethnicity_dfs)}
     return avg_loan
-ethnicity_avg_loan = avg_loan_by_ethnicity(ethnicities, ethnicity_dfs)
 
-#total loan amount for each ethnicity
+
 def total_loan_by_ethnicity(ethnicities, ethnicity_dfs):
     '''
     Computes average loan amount for each dataframe in inputted list.
@@ -41,12 +32,9 @@ def total_loan_by_ethnicity(ethnicities, ethnicity_dfs):
     '''
     total_loan = {eth:df['LoanAmount'].sum() for eth, df in zip(ethnicities, ethnicity_dfs)}
     return total_loan
-ethnicity_total_loan = total_loan_by_ethnicity(ethnicities, ethnicity_dfs)
 
-#colors for bar charts
-chart_colors = ['#003f5c', '#58508d', '#bc5090', '#dd5182','#ff6361', '#ffa600']
 
-#graph average loan amounts 
+
 def graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, save_loc):
     '''
     Graphs the Average Loan Amount by Ethnicity
@@ -65,9 +53,7 @@ def graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, save_loc):
     ax.set_title('Average Loan Amount by Ethnicity in Colorado', fontsize=18)
     plt.savefig(save_loc, bbox_inches='tight')
 
-graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, '../images/avg_loan_ethnicity.png')
 
-#graph total loan for each ethnicity
 def graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, save_loc):
     '''
     Graphs the total Loan Amount by Ethnicity
@@ -87,9 +73,8 @@ def graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, save_loc):
     ax.set_title('Total Loan Amount by Ethnicity in Colorado', fontsize=18)
     plt.savefig(save_loc, bbox_inches='tight')
 
-graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, '../images/total_loan_ethnicity.png')
 
-#top zip codes for each ethnicity
+
 def top_zip(ethnicity_dfs, ethnicities):
     '''
     Counts the number of loans for each Ethnicity group, sorts by top 5.
@@ -104,10 +89,14 @@ def top_zip(ethnicity_dfs, ethnicities):
         top_dict[eth]= sort_zip
     return top_dict
 
-top_zips = top_zip(ethnicity_dfs, ethnicities)
 
-#top zip code bar chart
+
 def graph_top_zips(top_zips, chart_colors, saveloc):
+    '''
+    Graphs up to the top 5 zip codes for each ethnicity (not used in README)
+
+    Returns: None
+    '''
     zips = pd.DataFrame(top_zips)
     zips.fillna(0, inplace=True)
     zips['total'] = zips['White'] + zips['American Indian or Alaska Native'] + zips['Asian'] + zips['Black or African American']+ zips['Puerto Rican'] + zips['Hispanic']
@@ -120,9 +109,7 @@ def graph_top_zips(top_zips, chart_colors, saveloc):
     ax.set_title('Top 5 Zip Codes for Count of Loans')
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_top_zips(top_zips, chart_colors, '../images/top_zip_loancount.png')
 
-#top counties for each ethnicity
 def top_county(ethnicity_dfs, ethnicities):
     '''
     Counts the number of loans for each Ethnicity group, sorts by top 5.
@@ -137,9 +124,7 @@ def top_county(ethnicity_dfs, ethnicities):
         top_dict[eth]= sort_counties
     return top_dict
 
-top_county = top_county(ethnicity_dfs, ethnicities)
 
-#top county bar chart
 def graph_top_counties(top_county, chart_colors, saveloc):
     counties = pd.DataFrame(top_county)
     counties.fillna(0, inplace=True)
@@ -154,9 +139,8 @@ def graph_top_counties(top_county, chart_colors, saveloc):
     ax.set_title('Top 5 Counties for Loans')
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_top_counties(top_county, chart_colors, '../images/top_county_loancount.png')
 
-#top county total loan amount
+
 def top_county_sum(ethnicity_dfs, ethnicities):
     '''
     Counts the number of loans for each Ethnicity group, sorts by top 5.
@@ -171,20 +155,13 @@ def top_county_sum(ethnicity_dfs, ethnicities):
         top_dict[eth]= sort_counties
     return top_dict
 
-top_county_sum = top_county_sum(ethnicity_dfs, ethnicities)
 
-#top county bar chart
-graph_top_counties(top_county_sum, chart_colors, '../images/top_county_loansum.png')
-
-
-#create list of population from demographics data
-demographic_eth_cols = ['NH Whites','Hispanic','NH Am Indian/Native','NH Asian','NH Afr Am']
-total_demographics = [sum(demographics_18[x]) for x in demographic_eth_cols]
-other = sum(demographics_18['NH Two or more']) + sum(demographics_18['NH Native Hawaiian/other'])
-total_demographics.append(other)
-
-#demographics graph
 def graph_demographics(total_demographics, ethnicities, saveloc):
+    '''
+    Graphs the total population for each ethnicity in Colorado.
+
+    Returns: None
+    '''
     fig, ax = plt.subplots(1,figsize=(12,4))
     ethnicities_dem = ethnicities[:-1]
     ethnicities_dem=np.append(ethnicities_dem, 'Other')
@@ -196,15 +173,13 @@ def graph_demographics(total_demographics, ethnicities, saveloc):
     ax.set_title('Distribution of Ethnicity in Colorado', fontsize=18)
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_demographics(total_demographics, ethnicities, '../images/demographics.png')
-
-#demographics for top 8 counties
-demographics_top_8 = demographics_18[(demographics_18['CTYNAME'] == 'Denver County') | (demographics_18['CTYNAME'] == 'El Paso County') |(demographics_18['CTYNAME'] == 'Jefferson County') |(demographics_18['CTYNAME'] == 'Arapahoe County') | (demographics_18['CTYNAME'] == 'Larimer County')|(demographics_18['CTYNAME'] == 'Adams County') | (demographics_18['CTYNAME'] == 'Douglas County') | (demographics_18['CTYNAME'] == 'Weld County')]
-demographics_top_8['Other'] = demographics_top_8['NH Native Hawaiian/other'] + demographics_top_8['NH Two or more']
-demographics_top_8 = demographics_top_8.set_index('CTYNAME').sort_values(['TOT_POP'],ascending=True)
-demographics_top_8 = demographics_top_8.rename(columns={'NH Whites':'White','NH Afr Am': 'Black or African American','NH Am Indian/Native':'American Indian or Alaska Native','NH Asian':'Asian'})
 
 def graph_demographics_top_counties(demographics_top_8, chart_colors, saveloc):
+    '''
+    Graphs the demographics for each of the 8 Top Counties for Loans from the PPP
+
+    Returns: None
+    '''
     ax = demographics_top_8[['White', 'Hispanic', 'American Indian or Alaska Native', 'Asian','Black or African American','Other']].plot(kind='barh', stacked=True, color=chart_colors, figsize=(10,6))
     y_axis = ax.yaxis
     y_axis.label.set_visible(False)
@@ -213,26 +188,13 @@ def graph_demographics_top_counties(demographics_top_8, chart_colors, saveloc):
     plt.yticks(fontsize = 14)
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_demographics_top_counties(demographics_top_8, chart_colors, '../images/top_county_loancount_demographic.png')
-
-
-#scatter comparison of Jobs Retained to Loan Amount by ethnicity
-ethnicity_dfs_job_comparison = [x.dropna(subset=['JobsRetained']) for x in ethnicity_dfs]
-
-loan_by_ethnicity = [list(x['LoanAmount'].values) for x in ethnicity_dfs_job_comparison]
-jobs_retained_by_ethnicity = [list(x['JobsRetained'].values) for x in ethnicity_dfs_job_comparison]
-
-## avg amount of loan compared to jobs retained by ethnicity
-avg_loan_by_ethnicity = [round(x['LoanAmount'].mean(),2) for x in ethnicity_dfs_job_comparison]
-avg_jobs_retained_by_ethnicity = [round(x['JobsRetained'].mean(),3) for x in ethnicity_dfs_job_comparison]
-
-def zip_lists(list1,list2):
-    zipped = [(x,y) for x,y in zip(list1, list2)]
-    return zipped
-avg_jobs_loans = zip_lists(avg_jobs_retained_by_ethnicity, avg_loan_by_ethnicity)
-
 
 def graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan_by_ethnicity, avg_jobs_retained_by_ethnicity, chart_colors, ethnicities, saveloc):
+    '''
+    Graphs the Loan Amount vs Jobs Retained as a Scatter Plot, color coded for ethnicity.
+
+    Returns: None
+    '''
     fig, ax = plt.subplots(1, figsize=(10,6))
 
     for i in range(len(loan_by_ethnicity)):
@@ -246,8 +208,51 @@ def graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan
     plt.legend()
     plt.savefig(saveloc, bbox_inches='tight')
 
-graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan_by_ethnicity, avg_jobs_retained_by_ethnicity, chart_colors, ethnicities, '../images/loan_vs_jobs_retained.png')
 
 
 if __name__ == '__main__':
    
+    #colors for bar charts
+    chart_colors = ['#003f5c', '#58508d', '#bc5090', '#dd5182','#ff6361', '#ffa600']
+   
+   #List all unique ethnicities
+    ethnicities = df_with_counties['RaceEthnicity'].unique()
+    
+    #unpack dataframes
+    white_df, hispanic_df, am_indian_alaska_df, asian_df, black_df, puerto_rican_df = split_ethnicities(ethnicities)
+    ethnicity_dfs = [white_df, hispanic_df, am_indian_alaska_df, asian_df, black_df, puerto_rican_df]
+
+    #calculations:
+    ethnicity_avg_loan = avg_loan_by_ethnicity(ethnicities, ethnicity_dfs)
+    ethnicity_total_loan = total_loan_by_ethnicity(ethnicities, ethnicity_dfs)
+    top_zips = top_zip(ethnicity_dfs, ethnicities)
+    top_county = top_county(ethnicity_dfs, ethnicities)
+    top_county_sum = top_county_sum(ethnicity_dfs, ethnicities)
+
+    #calculate demographic population
+    demographic_eth_cols = ['NH Whites','Hispanic','NH Am Indian/Native','NH Asian','NH Afr Am']
+    total_demographics = [sum(demographics_18[x]) for x in demographic_eth_cols]
+    other = sum(demographics_18['NH Two or more']) + sum(demographics_18['NH Native Hawaiian/other'])
+    total_demographics.append(other)
+
+    #calculate demographics for top 8 counties
+    demographics_top_8 = demographics_18[(demographics_18['CTYNAME'] == 'Denver County') | (demographics_18['CTYNAME'] == 'El Paso County') |(demographics_18['CTYNAME'] == 'Jefferson County') |(demographics_18['CTYNAME'] == 'Arapahoe County') | (demographics_18['CTYNAME'] == 'Larimer County')|(demographics_18['CTYNAME'] == 'Adams County') | (demographics_18['CTYNAME'] == 'Douglas County') | (demographics_18['CTYNAME'] == 'Weld County')]
+    demographics_top_8['Other'] = demographics_top_8['NH Native Hawaiian/other'] + demographics_top_8['NH Two or more']
+    demographics_top_8 = demographics_top_8.set_index('CTYNAME').sort_values(['TOT_POP'],ascending=True)
+    demographics_top_8 = demographics_top_8.rename(columns={'NH Whites':'White','NH Afr Am': 'Black or African American','NH Am Indian/Native':'American Indian or Alaska Native','NH Asian':'Asian'})
+
+    #calculations for amount of loan compared to jobs retained by ethnicity
+    loan_by_ethnicity = [list(x['LoanAmount'].values) for x in ethnicity_dfs_job_comparison]
+    jobs_retained_by_ethnicity = [list(x['JobsRetained'].values) for x in ethnicity_dfs_job_comparison]
+    avg_loan_by_ethnicity = [round(x['LoanAmount'].mean(),2) for x in ethnicity_dfs_job_comparison]
+    avg_jobs_retained_by_ethnicity = [round(x['JobsRetained'].mean(),3) for x in ethnicity_dfs_job_comparison]
+
+    #graphs
+    graph_total_loan_ethnicity(ethnicity_total_loan, chart_colors, '../images/total_loan_ethnicity.png')
+    graph_average_loan_ethnicity(ethnicity_avg_loan, chart_colors, '../images/avg_loan_ethnicity.png')
+    graph_top_zips(top_zips, chart_colors, '../images/top_zip_loancount.png')
+    graph_top_counties(top_county, chart_colors, '../images/top_county_loancount.png')
+    graph_top_counties_sum(top_county_sum, chart_colors, '../images/top_county_loansum.png')
+    graph_demographics(total_demographics, ethnicities, '../images/demographics.png')
+    graph_demographics_top_counties(demographics_top_8, chart_colors, '../images/top_county_loancount_demographic.png')
+    graph_job_loanamount(loan_by_ethnicity, jobs_retained_by_ethnicity, avg_loan_by_ethnicity, avg_jobs_retained_by_ethnicity, chart_colors, ethnicities, '../images/loan_vs_jobs_retained.png')
